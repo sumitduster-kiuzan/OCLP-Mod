@@ -23,7 +23,7 @@ class OSUpdateFrame(wx.Frame):
     Create a modal frame for displaying information to the user before an update is applied
     """
     def __init__(self, parent: wx.Frame, title: str, global_constants: constants.Constants, screen_location: tuple = None):
-        logging.info("正在初始化准备更新窗口")
+        logging.info("Initializing pre-update preparation window")
 
         if parent:
             self.frame = parent
@@ -37,9 +37,9 @@ class OSUpdateFrame(wx.Frame):
 
         os_data = utilities.fetch_staged_update(variant="Preflight")
         if os_data[0] is None:
-            logging.info("未找到已暂存的更新")
+            logging.info("No staged update found")
             self._exit()
-        logging.info(f"找到已暂存的更新: {os_data[0]} ({os_data[1]})")
+        logging.info(f"Found staged update: {os_data[0]} ({os_data[1]})")
         self.os_data = os_data
 
         # Check if we need to patch the system volume
@@ -52,13 +52,13 @@ class OSUpdateFrame(wx.Frame):
         ).device_properties
 
         if results[HardwarePatchsetSettings.KERNEL_DEBUG_KIT_REQUIRED] is True:
-            logging.info("需要内核调试工具包")
+            logging.info("Kernel Debug Kit required")
         if results[HardwarePatchsetSettings.METALLIB_SUPPORT_PKG_REQUIRED] is True:
             # TODO: Download MetalLibSupportPkg
-            logging.info("需要MetalLib支持包")
+            logging.info("MetalLib Support package required")
 
         if not any([results[HardwarePatchsetSettings.KERNEL_DEBUG_KIT_REQUIRED], results[HardwarePatchsetSettings.METALLIB_SUPPORT_PKG_REQUIRED]]):
-            logging.info("不需要额外资源")
+            logging.info("No extra resources required")
             self._exit()
 
         self._generate_ui()
@@ -209,7 +209,7 @@ class OSUpdateFrame(wx.Frame):
                This may take a few minutes.
         """
 
-        header = wx.StaticText(self.frame, label="正在为macOS软件更新做准备", pos=(-1,5))
+        header = wx.StaticText(self.frame, label="Preparing macOS update", pos=(-1,5))
         header.SetFont(gui_support.font_factory(19, wx.FONTWEIGHT_BOLD))
         header.Centre(wx.HORIZONTAL)
 
@@ -219,7 +219,7 @@ class OSUpdateFrame(wx.Frame):
         label.Centre(wx.HORIZONTAL)
 
         # this may take a few minutes
-        label = wx.StaticText(self.frame, label="这可能需要几分钟时间。", pos=(-1, 55))
+        label = wx.StaticText(self.frame, label="This may take a few minutes.", pos=(-1, 55))
         label.SetFont(gui_support.font_factory(13, wx.FONTWEIGHT_NORMAL))
         label.Centre(wx.HORIZONTAL)
 
@@ -244,13 +244,13 @@ class OSUpdateFrame(wx.Frame):
         """
         Notify user of what OCLP is doing
         """
-        message=f"OCLP-Mod检测到正在下载macOS更新:\n{self.os_data[0]} ({self.os_data[1]})\n\n补丁程序需要为更新做准备，并将在更新后下载任何可能需要的额外资源。\n\n这可能需要几分钟时间，补丁程序完成后将退出。"
+        message=f"Open Legacy Mode detected a macOS update download in progress:\n{self.os_data[0]} ({self.os_data[1]})\n\nThe patcher needs to prepare for the update and will fetch any additional resources after the update if needed.\n\nThis may take a few minutes; the patcher will exit when done."
         # Yes/No for caching
-        dlg = wx.MessageDialog(self.frame, message=message, caption="OCLP-Mod", style=wx.YES_NO | wx.ICON_INFORMATION)
-        dlg.SetYesNoLabels("&确定", "&取消")
+        dlg = wx.MessageDialog(self.frame, message=message, caption="Open Legacy Mode", style=wx.YES_NO | wx.ICON_INFORMATION)
+        dlg.SetYesNoLabels("&OK", "&Cancel")
         result = dlg.ShowModal()
         if result == wx.ID_NO:
-            logging.info("用户取消了系统缓存")
+            logging.info("User cancelled system cache preparation")
             if hasattr(self, "download_obj"):
                 self.download_obj.stop()
             self.did_cancel = 1

@@ -62,7 +62,7 @@ class GenerateMenubar:
         menubar = wx.MenuBar()
         fileMenu = wx.Menu()
 
-        aboutItem = fileMenu.Append(wx.ID_ABOUT, "&关于 OCLP-Mod")
+        aboutItem = fileMenu.Append(wx.ID_ABOUT, "&About Open Legacy Mode")
         fileMenu.AppendSeparator()
         revealLogItem = fileMenu.Append(wx.ID_ANY, "&Reveal Log File")
 
@@ -287,10 +287,10 @@ class RestartHost:
         self.popup = wx.MessageDialog(
             self.frame,
             message,
-            "重启以应用?",
+            "Reboot to apply?",
             wx.YES_NO | wx.YES_DEFAULT | wx.ICON_INFORMATION
         )
-        self.popup.SetYesNoLabels("重启", "忽略")
+        self.popup.SetYesNoLabels("Reboot", "Ignore")
         answer = self.popup.ShowModal()
         if answer == wx.ID_YES:
             # Reboots with Count Down prompt (user can still dismiss if needed)

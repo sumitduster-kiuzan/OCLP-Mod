@@ -60,25 +60,25 @@ class DMGFlashFrame(wx.Frame):
 
 
     def _generate_elements(self) -> None:
-        title_label = wx.StaticText(self, label="选择本地的DMG镜像", pos=(-1,1))
+        title_label = wx.StaticText(self, label="Choose a local DMG image", pos=(-1,1))
         title_label.SetFont(gui_support.font_factory(19, wx.FONTWEIGHT_BOLD))
         title_label.Centre(wx.HORIZONTAL)
         
 
 
     def _choose_dmg_file(self) -> None:
-        wildcard = "DMG 文件 (*.dmg)|*.dmg"
+        wildcard = "DMG files (*.dmg)|*.dmg"
         dialog = wx.FileDialog(
-        None, message="选择一个DMG镜像", wildcard=wildcard, style=wx.FD_OPEN
+        None, message="Choose a DMG image", wildcard=wildcard, style=wx.FD_OPEN
     )
 
         if dialog.ShowModal() == wx.ID_OK: 
             file_path = dialog.GetPath() 
-            logging.info(f"选择的DMG文件路径: {file_path}")
+            logging.info(f"Selected DMG file path: {file_path}")
             self.on_select(file_path)
             return file_path
         else:
-            logging.info("未选择文件")
+            logging.info("No file selected")
             self.on_return_to_main_menu()
         dialog.Destroy()
         
@@ -87,7 +87,7 @@ class DMGFlashFrame(wx.Frame):
     def on_select(self, path) -> None:
        
         # Fetching information on local disks
-        title_label = wx.StaticText(self, label="取回本地硬盘信息", pos=(-1,1))
+        title_label = wx.StaticText(self, label="Fetching local disk information", pos=(-1,1))
         title_label.SetFont(gui_support.font_factory(19, wx.FONTWEIGHT_BOLD))
         title_label.Centre(wx.HORIZONTAL)
 
@@ -122,12 +122,12 @@ class DMGFlashFrame(wx.Frame):
         self.frame_modal = wx.Dialog(self, title=self.title, size=(350, 200))
 
         # Title: Select local disk
-        title_label = wx.StaticText(self.frame_modal, label="选择本地硬盘", pos=(-1,5))
+        title_label = wx.StaticText(self.frame_modal, label="Select local disk", pos=(-1,5))
         title_label.SetFont(gui_support.font_factory(19, wx.FONTWEIGHT_BOLD))
         title_label.Centre(wx.HORIZONTAL)
 
         # Label: Selected USB will be erased, please backup any data
-        warning_label = wx.StaticText(self.frame_modal, label="选择的U盘会格式化！", pos=(-1, title_label.GetPosition()[1] + title_label.GetSize()[1] + 5))
+        warning_label = wx.StaticText(self.frame_modal, label="Selected USB will be erased!", pos=(-1, title_label.GetPosition()[1] + title_label.GetSize()[1] + 5))
         warning_label.SetFont(gui_support.font_factory(11, wx.FONTWEIGHT_NORMAL))
         warning_label.Centre(wx.HORIZONTAL)
 
@@ -135,7 +135,7 @@ class DMGFlashFrame(wx.Frame):
         if self.available_disks:
             spacer = 5
             entries = len(self.available_disks)
-            logging.info("可用硬盘:")
+            logging.info("Available disks:")
             for disk in self.available_disks:
                 logging.info(f" - {disk}: {self.available_disks[disk]['name']} - {utilities.human_fmt(self.available_disks[disk]['size'])}")
                 disk_button = wx.Button(self.frame_modal, label=f"{disk}: {self.available_disks[disk]['name']} - {utilities.human_fmt(self.available_disks[disk]['size'])}", pos=(-1, warning_label.GetPosition()[1] + warning_label.GetSize()[1] + spacer), size=(300, 30))
@@ -145,17 +145,17 @@ class DMGFlashFrame(wx.Frame):
                     disk_button.SetDefault()
                 spacer += 25
         else:
-            disk_button = wx.StaticText(self.frame_modal, label="未找到可用硬盘", pos=(-1, warning_label.GetPosition()[1] + warning_label.GetSize()[1] + 5))
+            disk_button = wx.StaticText(self.frame_modal, label="No applicable disks found", pos=(-1, warning_label.GetPosition()[1] + warning_label.GetSize()[1] + 5))
             disk_button.SetFont(gui_support.font_factory(13, wx.FONTWEIGHT_BOLD))
             disk_button.Centre(wx.HORIZONTAL)
 
         # Search for disks again
-        search_button = wx.Button(self.frame_modal, label="再次扫描", pos=(-1, disk_button.GetPosition()[1] + disk_button.GetSize()[1]), size=(150, 30))
+        search_button = wx.Button(self.frame_modal, label="Rescan", pos=(-1, disk_button.GetPosition()[1] + disk_button.GetSize()[1]), size=(150, 30))
         search_button.Bind(wx.EVT_BUTTON, lambda event, temp=path: self.on_select(temp))
         search_button.Centre(wx.HORIZONTAL)
 
         # Button: Return to Main Menu
-        cancel_button = wx.Button(self.frame_modal, label="返回", pos=(-1, search_button.GetPosition()[1] + search_button.GetSize()[1] - 10), size=(150, 30))
+        cancel_button = wx.Button(self.frame_modal, label="Return", pos=(-1, search_button.GetPosition()[1] + search_button.GetSize()[1] - 10), size=(150, 30))
         cancel_button.Bind(wx.EVT_BUTTON, self.on_return_to_main_menu)
         cancel_button.Centre(wx.HORIZONTAL)
 
@@ -168,11 +168,11 @@ class DMGFlashFrame(wx.Frame):
 
 
     def on_select_disk(self, disk: dict, path) -> None:
-        answer = wx.MessageBox(f"确定抹掉 '{disk['name']}'?\n会格式化,无法回退.", "继续", wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+        answer = wx.MessageBox(f"Erase '{disk['name']}'?\nThis will format and cannot be undone.", "Continue", wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
         if answer != wx.YES:
             return
 
-        logging.info(f"你选择了: {disk['name']}")
+        logging.info(f"You selected: {disk['name']}")
 
         self.frame_modal.Destroy()
 
@@ -182,7 +182,7 @@ class DMGFlashFrame(wx.Frame):
         self.SetSize((450, -1))
 
         file_name = os.path.basename(path)
-        print(f"文件名: {file_name}")
+        print(f"Filename: {file_name}")
 
         match = re.search(r'macOS\s+([\w\s]+)\+([\d.]+)', file_name)
  
@@ -190,28 +190,28 @@ class DMGFlashFrame(wx.Frame):
            os_name = match.group(1)
            os_version = match.group(2) 
            result = f"macOS {os_name} {os_version}"
-           logging.info(f"提取的版本信息: {result}")
+           logging.info(f"Extracted version: {result}")
            return result
         else:
-           logging.info("未找到匹配的版本信息")
+           logging.info("No matching version found")
 
         # Title: Creating Installer: {installer_name}
-        title_label = wx.StaticText(self, label=f"正在创建: {match}", pos=(-1,1))
+        title_label = wx.StaticText(self, label=f"Creating: {match}", pos=(-1,1))
         title_label.SetFont(gui_support.font_factory(19, wx.FONTWEIGHT_BOLD))
         title_label.Centre(wx.HORIZONTAL)
 
         # Label: Creating macOS installers can take 30min+ on slower USB drives.
-        warning_label = wx.StaticText(self, label="根据设备速度，可能需要30min甚至更久.", pos=(-1, title_label.GetPosition()[1] + title_label.GetSize()[1] + 5))
+        warning_label = wx.StaticText(self, label="Depending on device speed, this may take 30+ minutes.", pos=(-1, title_label.GetPosition()[1] + title_label.GetSize()[1] + 5))
         warning_label.SetFont(gui_support.font_factory(11, wx.FONTWEIGHT_NORMAL))
         warning_label.Centre(wx.HORIZONTAL)
 
         # Label: We will notify you when the installer is ready.
-        warning_label = wx.StaticText(self, label="可以去做其他事情，比如看看SimpleHac资源社，完成会提示你.", pos=(-1, warning_label.GetPosition()[1] + warning_label.GetSize()[1] + 5))
+        warning_label = wx.StaticText(self, label="Feel free to do other tasks; you'll be notified when done.", pos=(-1, warning_label.GetPosition()[1] + warning_label.GetSize()[1] + 5))
         warning_label.SetFont(gui_support.font_factory(11, wx.FONTWEIGHT_NORMAL))
         warning_label.Centre(wx.HORIZONTAL)
 
         # Label: Bytes Written: 0 MB
-        bytes_written_label = wx.StaticText(self, label="已写入: 0.00 MB", pos=(-1, warning_label.GetPosition()[1] + warning_label.GetSize()[1] + 5))
+        bytes_written_label = wx.StaticText(self, label="Bytes written: 0.00 MB", pos=(-1, warning_label.GetPosition()[1] + warning_label.GetSize()[1] + 5))
         bytes_written_label.SetFont(gui_support.font_factory(13, wx.FONTWEIGHT_NORMAL))
         bytes_written_label.Centre(wx.HORIZONTAL)
 
@@ -246,7 +246,7 @@ class DMGFlashFrame(wx.Frame):
             except:
                 total_bytes_written = initial_bytes_written
             bytes_written = total_bytes_written - initial_bytes_written
-            wx.CallAfter(bytes_written_label.SetLabel, f"已写入: {bytes_written:.2f} MB")
+            wx.CallAfter(bytes_written_label.SetLabel, f"Bytes written: {bytes_written:.2f} MB")
             try:
                 bytes_written = int(bytes_written)
             except:
@@ -263,7 +263,7 @@ class DMGFlashFrame(wx.Frame):
         progress_bar_animation = gui_support.GaugePulseCallback(self.constants, progress_bar)
         progress_bar_animation.start_pulse()
 
-        bytes_written_label.SetLabel("验证安装器...")
+        bytes_written_label.SetLabel("Verifying installer...")
         error_message = self._validate_installer_pkg(disk['identifier'])
 
         progress_bar_animation.stop_pulse()

@@ -67,18 +67,18 @@ class SettingsFrame(wx.Frame):
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.AddSpacer(10)
 
-        model_label = wx.StaticText(frame, label="目标机型", pos=(-1, -1))
+        model_label = wx.StaticText(frame, label="Target Model", pos=(-1, -1))
         model_label.SetFont(gui_support.font_factory(13, wx.FONTWEIGHT_BOLD))
         sizer.Add(model_label, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        model_choice = wx.Choice(frame, choices=model_array.SupportedSMBIOS + ["主机机型"], pos=(-1, -1), size=(150, -1))
+        model_choice = wx.Choice(frame, choices=model_array.SupportedSMBIOS + ["Host Model"], pos=(-1, -1), size=(150, -1))
         model_choice.SetFont(gui_support.font_factory(13, wx.FONTWEIGHT_NORMAL))
         model_choice.Bind(wx.EVT_CHOICE, lambda event: self.on_model_choice(event, model_choice))
-        selection = self.constants.custom_model if self.constants.custom_model else "主机机型"
+        selection = self.constants.custom_model if self.constants.custom_model else "Host Model"
         model_choice.SetSelection(model_choice.FindString(selection))
         sizer.Add(model_choice, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        model_description = wx.StaticText(frame, label="覆写Patcher将要仿冒的机型", pos=(-1, -1))
+        model_description = wx.StaticText(frame, label="Override the model the patcher will spoof", pos=(-1, -1))
         model_description.SetFont(gui_support.font_factory(11, wx.FONTWEIGHT_NORMAL))
         sizer.Add(model_description, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
@@ -92,7 +92,7 @@ class SettingsFrame(wx.Frame):
         sizer.Add(notebook, 1, wx.EXPAND | wx.ALL, 10)
 
         # Add return button
-        return_button = wx.Button(frame, label="返回", pos=(-1, -1), size=(100, 30))
+        return_button = wx.Button(frame, label="Return", pos=(-1, -1), size=(100, 30))
         return_button.Bind(wx.EVT_BUTTON, self.on_return)
         return_button.SetFont(gui_support.font_factory(13, wx.FONTWEIGHT_NORMAL))
         sizer.Add(return_button, 0, wx.ALIGN_CENTER | wx.ALL, 10)

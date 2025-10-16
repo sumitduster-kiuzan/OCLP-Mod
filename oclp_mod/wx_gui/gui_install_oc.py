@@ -61,12 +61,12 @@ class InstallOCFrame(wx.Frame):
         """
 
         # Title label: Install OpenCore
-        title_label = wx.StaticText(self, label="安装 OpenCore", pos=(-1,5))
+        title_label = wx.StaticText(self, label="Install OpenCore", pos=(-1,5))
         title_label.SetFont(gui_support.font_factory(19, wx.FONTWEIGHT_BOLD))
         title_label.Centre(wx.HORIZONTAL)
 
         # Text: Parsing local disks...
-        text_label = wx.StaticText(self, label="正在取回本地硬盘信息...", pos=(-1,30))
+        text_label = wx.StaticText(self, label="Fetching information on local disks...", pos=(-1,30))
         text_label.SetFont(gui_support.font_factory(13, wx.FONTWEIGHT_NORMAL))
         text_label.Centre(wx.HORIZONTAL)
         self.text_label = text_label
@@ -112,17 +112,17 @@ class InstallOCFrame(wx.Frame):
         dialog = wx.Dialog(self, title=self.title, size=(380, -1))
 
         # Title label: Install OpenCore
-        title_label = wx.StaticText(dialog, label="安装OpenCore", pos=(-1,5))
+        title_label = wx.StaticText(dialog, label="Install OpenCore", pos=(-1,5))
         title_label.SetFont(gui_support.font_factory(19, wx.FONTWEIGHT_BOLD))
         title_label.Centre(wx.HORIZONTAL)
 
         # Text: select disk to install OpenCore onto
-        text_label = wx.StaticText(dialog, label="选择你想安装OpenCore引导的磁盘:", pos=(-1, title_label.GetPosition()[1] + title_label.GetSize()[1] + 5))
+        text_label = wx.StaticText(dialog, label="Select the disk to install OpenCore to:", pos=(-1, title_label.GetPosition()[1] + title_label.GetSize()[1] + 5))
         text_label.SetFont(gui_support.font_factory(13, wx.FONTWEIGHT_NORMAL))
         text_label.Centre(wx.HORIZONTAL)
 
         # Add note: "Missing disks? Ensure they're FAT32 or formatted as GUID/GPT"
-        gpt_note = wx.StaticText(dialog, label="没找到想要的磁盘？请确保分区格式是FAT32或已经格式化为GUID/GPT", pos=(-1, text_label.GetPosition()[1] + text_label.GetSize()[1] + 5))
+        gpt_note = wx.StaticText(dialog, label="Missing disks? Ensure they're FAT32 or formatted as GUID/GPT", pos=(-1, text_label.GetPosition()[1] + text_label.GetSize()[1] + 5))
         gpt_note.SetFont(gui_support.font_factory(10, wx.FONTWEIGHT_NORMAL))
         gpt_note.Centre(wx.HORIZONTAL)
 
@@ -154,7 +154,7 @@ class InstallOCFrame(wx.Frame):
 
             if disk_root:
                 # Add note: "Note: Blue represent the disk OpenCore is currently booted from"
-                disk_label = wx.StaticText(dialog, label="注意: 蓝色表示当前从 OpenCore 启动的磁盘", pos=(-1, disk_button.GetPosition()[1] + disk_button.GetSize()[1] + 5))
+            disk_label = wx.StaticText(dialog, label="Note: Blue indicates disk OpenCore is currently booted from", pos=(-1, disk_button.GetPosition()[1] + disk_button.GetSize()[1] + 5))
                 disk_label.SetFont(gui_support.font_factory(10, wx.FONTWEIGHT_NORMAL))
                 disk_label.Centre(wx.HORIZONTAL)
             else:
@@ -162,17 +162,17 @@ class InstallOCFrame(wx.Frame):
                 disk_label.SetFont(gui_support.font_factory(10, wx.FONTWEIGHT_NORMAL))
         else:
             # Text: Failed to find any applicable disks
-            disk_label = wx.StaticText(dialog, label="没找到任何可使用的磁盘", pos=(-1, gpt_note.GetPosition()[1] + gpt_note.GetSize()[1] + 5))
+            disk_label = wx.StaticText(dialog, label="Failed to find any applicable disks", pos=(-1, gpt_note.GetPosition()[1] + gpt_note.GetSize()[1] + 5))
             disk_label.SetFont(gui_support.font_factory(13, wx.FONTWEIGHT_BOLD))
             disk_label.Centre(wx.HORIZONTAL)
 
         # Add button: Search for disks again
-        search_button = wx.Button(dialog, label="再次扫描", size=(150,30), pos=(-1, disk_label.GetPosition()[1] + disk_label.GetSize()[1] + 5))
+        search_button = wx.Button(dialog, label="Rescan", size=(150,30), pos=(-1, disk_label.GetPosition()[1] + disk_label.GetSize()[1] + 5))
         search_button.Centre(wx.HORIZONTAL)
         search_button.Bind(wx.EVT_BUTTON, self.on_reload_frame)
 
         # Add button: Return to main menu
-        return_button = wx.Button(dialog, label="返回", size=(150,30), pos=(-1, search_button.GetPosition()[1] + 20))
+        return_button = wx.Button(dialog, label="Return", size=(150,30), pos=(-1, search_button.GetPosition()[1] + 20))
         return_button.Centre(wx.HORIZONTAL)
         return_button.Bind(wx.EVT_BUTTON, self.on_return_to_main_menu)
 
@@ -198,7 +198,7 @@ class InstallOCFrame(wx.Frame):
         )
 
         # Add text: "Volumes on {disk}"
-        text_label = wx.StaticText(dialog, label=f"这个磁盘上的卷 → {disk}", pos=(-1, 10))
+        text_label = wx.StaticText(dialog, label=f"Volumes on {disk}", pos=(-1, 10))
         text_label.SetFont(gui_support.font_factory(19, wx.FONTWEIGHT_BOLD))
         text_label.Centre(wx.HORIZONTAL)
 
@@ -218,7 +218,7 @@ class InstallOCFrame(wx.Frame):
             spacer += 25
 
         # Add button: Return to main menu
-        return_button = wx.Button(dialog, label="返回", size=(150,30), pos=(-1, disk_button.GetPosition()[1] + disk_button.GetSize()[1]))
+        return_button = wx.Button(dialog, label="Return", size=(150,30), pos=(-1, disk_button.GetPosition()[1] + disk_button.GetSize()[1]))
         return_button.Centre(wx.HORIZONTAL)
         return_button.Bind(wx.EVT_BUTTON, self.on_return_to_main_menu)
 
@@ -239,13 +239,13 @@ class InstallOCFrame(wx.Frame):
         # Create dialog
         dialog = wx.Dialog(
             self,
-            title=f"正在向此分区安装 → {partition}",
+            title=f"Installing OpenCore to → {partition}",
             style=wx.CAPTION | wx.CLOSE_BOX,
             size=(370, 200)
         )
 
         # Add text: "Installing OpenCore to {partition}"
-        text_label = wx.StaticText(dialog, label=f"正在向此分区安装 → {partition}", pos=(-1, 10))
+        text_label = wx.StaticText(dialog, label=f"Installing OpenCore to → {partition}", pos=(-1, 10))
         text_label.SetFont(gui_support.font_factory(19, wx.FONTWEIGHT_BOLD))
         text_label.Centre(wx.HORIZONTAL)
 
@@ -255,7 +255,7 @@ class InstallOCFrame(wx.Frame):
         self.text_box = text_box
 
         # Add button: Return to main menu
-        return_button = wx.Button(dialog, label="返回", size=(150,30), pos=(-1, text_box.GetPosition()[1] + text_box.GetSize()[1] + 10))
+        return_button = wx.Button(dialog, label="Return", size=(150,30), pos=(-1, text_box.GetPosition()[1] + text_box.GetSize()[1] + 10))
         return_button.Centre(wx.HORIZONTAL)
         return_button.Bind(wx.EVT_BUTTON, self.on_return_to_main_menu)
         return_button.Disable()
@@ -286,7 +286,7 @@ class InstallOCFrame(wx.Frame):
                 self.constants.update_stage = gui_support.AutoUpdateStages.ROOT_PATCHING
                 popup_message = wx.MessageDialog(
                     self,
-                    f"OpenCore安装成功！\n\n你要进行驱动补丁吗？", "Success",
+                    f"OpenCore installation successful!\n\nWould you like to run root patches now?", "Success",
                     wx.YES_NO | wx.YES_DEFAULT
                 )
                 popup_message.ShowModal()
@@ -302,11 +302,11 @@ class InstallOCFrame(wx.Frame):
                 return
 
             elif not self.constants.custom_model:
-                gui_support.RestartHost(self).restart(message="OpenCore 已完成到磁盘的安装！\n\n您需要重新启动并按住 Option 键并选择 OpenCore/Boot EFI 的选项。\n\n你想现在重启吗?")
+                gui_support.RestartHost(self).restart(message="OpenCore has been installed to disk!\n\nYou need to reboot, hold Option, and choose the OpenCore/Boot EFI entry.\n\nReboot now?")
             else:
                 popup_message = wx.MessageDialog(
                     self,
-                    f"OpenCore 已完成安装到磁盘！\n\n您可以弹出驱动器，将其插入 {self.constants.custom_model}, 并重启, 按住 Option 键并选择 OpenCore/Boot EFI 的选项。", "Success",
+                    f"OpenCore installation complete!\n\nYou can eject the drive, insert into {self.constants.custom_model}, reboot, hold Option and select the OpenCore/Boot EFI entry.", "Success",
                     wx.OK
                 )
                 popup_message.ShowModal()

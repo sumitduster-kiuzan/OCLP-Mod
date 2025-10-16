@@ -76,7 +76,7 @@ class UpdateFrame(wx.Frame):
         )
 
         # Title: Preparing update
-        title_label = wx.StaticText(self.frame, label="准备下载...", pos=(-1,1))
+        title_label = wx.StaticText(self.frame, label="Preparing download...", pos=(-1,1))
         title_label.SetFont(gui_support.font_factory(19, wx.FONTWEIGHT_BOLD))
         title_label.Centre(wx.HORIZONTAL)
 
@@ -117,11 +117,11 @@ class UpdateFrame(wx.Frame):
         if download_obj.download_complete is False:
             progress_bar_animation.stop_pulse()
             progress_bar.SetValue(0)
-            wx.MessageBox("下载失败！如果重试仍无法下载，请前往Github下载！", "严重错误!", wx.OK | wx.ICON_ERROR)
+            wx.MessageBox("Download failed! If retrying doesn't work, please download from GitHub.", "Critical Error!", wx.OK | wx.ICON_ERROR)
             sys.exit(1)
 
         # Title: Extracting update
-        title_label.SetLabel("解包...")
+        title_label.SetLabel("Extracting...")
         title_label.Centre(wx.HORIZONTAL)
         wx.Yield()
 
@@ -131,7 +131,7 @@ class UpdateFrame(wx.Frame):
         gui_support.wait_for_thread(thread)
 
         # Title: Installing update
-        title_label.SetLabel("正在安装更新...")
+        title_label.SetLabel("Installing update...")
         title_label.Centre(wx.HORIZONTAL)
 
         thread = threading.Thread(target=self._install_update)
@@ -140,7 +140,7 @@ class UpdateFrame(wx.Frame):
         gui_support.wait_for_thread(thread)
 
         # Title: Update complete
-        title_label.SetLabel("更新完成")
+        title_label.SetLabel("Update complete")
         title_label.Centre(wx.HORIZONTAL)
 
         # Progress bar
@@ -148,7 +148,7 @@ class UpdateFrame(wx.Frame):
         progress_bar_animation.stop_pulse()
 
         # Label: 0.6.6 has been installed to:
-        installed_label = wx.StaticText(self.frame, label=f"{version_label} 已安装在:", pos=(-1, progress_bar.GetPosition().y - 15))
+        installed_label = wx.StaticText(self.frame, label=f"{version_label} installed to:", pos=(-1, progress_bar.GetPosition().y - 15))
         installed_label.SetFont(gui_support.font_factory(13, wx.FONTWEIGHT_BOLD))
         installed_label.Centre(wx.HORIZONTAL)
 
@@ -158,7 +158,7 @@ class UpdateFrame(wx.Frame):
         installed_path_label.Centre(wx.HORIZONTAL)
 
         # Label: Launching update shortly...
-        launch_label = wx.StaticText(self.frame, label="很快就启动更新...", pos=(-1, installed_path_label.GetPosition().y + 30))
+        launch_label = wx.StaticText(self.frame, label="Launching updated app shortly...", pos=(-1, installed_path_label.GetPosition().y + 30))
         launch_label.SetFont(gui_support.font_factory(13, wx.FONTWEIGHT_NORMAL))
         launch_label.Centre(wx.HORIZONTAL)
 
@@ -172,7 +172,7 @@ class UpdateFrame(wx.Frame):
 
         timer = 5
         while True:
-            launch_label.SetLabel(f"旧进程将在 {timer} 秒内关闭")
+            launch_label.SetLabel(f"Closing old process in {timer} seconds")
             launch_label.Centre(wx.HORIZONTAL)
             wx.Yield()
             time.sleep(1)
@@ -222,7 +222,7 @@ class UpdateFrame(wx.Frame):
             wx.CallAfter(self.progress_bar.SetValue, 0)
             if "User cancelled" in result.stderr.decode("utf-8"):
                 logging.info("User cancelled update")
-                wx.CallAfter(wx.MessageBox, "用户取消了更新", "更新取消", wx.OK | wx.ICON_INFORMATION)
+                wx.CallAfter(wx.MessageBox, "User cancelled the update", "Update cancelled", wx.OK | wx.ICON_INFORMATION)
             else:
                 logging.critical("Failed to install update.")
                 subprocess_wrapper.log(result)
@@ -231,7 +231,7 @@ class UpdateFrame(wx.Frame):
                 logging.error("Failed to install update, attempting to open PKG")
                 subprocess.run(["/usr/bin/open", str(self.pkg_download_path)])
 
-                wx.CallAfter(wx.MessageBox, f"安装失败. 请手动安装OCLP-Mod.pkg", "严重错误", wx.OK | wx.ICON_ERROR)
+                wx.CallAfter(wx.MessageBox, f"Installation failed. Please install OCLP-Mod.pkg manually.", "Critical Error", wx.OK | wx.ICON_ERROR)
             wx.CallAfter(sys.exit, 1)
 
 
